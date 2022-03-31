@@ -20,7 +20,6 @@ public class SentenceParser {
         while (m2.find()) {
             sentence = m2.group();
             sentenceList = wordParser.parseToWord(sentenceList, sentence);
-            // System.out.print(sentence);
             paragraphList.addElement(sentenceList);
         }
         return paragraphList;

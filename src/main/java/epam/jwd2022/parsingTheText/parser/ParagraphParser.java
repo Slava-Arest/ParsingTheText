@@ -17,7 +17,7 @@ public class ParagraphParser {
     private static final String REGEX_PARAGRAPH_WITH_LISTING = "(\\s*(\n.+))([^(\\s*([^\\t]+)\\s)])|\\s*([^\\t]+)";
 
     TextReader textReader = new TextReader();
-    SentenceParser sentenceParser = new SentenceParser();
+    CodeBlockParser codeBlockParser = new CodeBlockParser();
 
     public TextPart parse(String path) throws IOException {
         String text = initialize(path);
@@ -40,7 +40,6 @@ public class ParagraphParser {
     }
 
     public TextPart parseToParagraph(TextPart wholeText, String text) {
-        // parse to paragraph
         TextPart paragraphList = new TextPart();
         Pattern pattertParagraph = Pattern
                 .compile(REGEX_PARAGRAPH_WITH_LISTING);
@@ -50,13 +49,12 @@ public class ParagraphParser {
         while (matcher.find()) {
             paragraph = matcher.group();
             if (Pattern.matches(REGEX_LISTING, paragraph)) {
-                // if listing - add to list without parsing
                 paragraphLeaf = new LeafTextPart(paragraph);
                 System.out.print(paragraphLeaf);
                 paragraphList.addElement(paragraphLeaf);
             } else {
                 System.out.print(paragraph);
-//                paragraphList = sentenceParser.parseToSentense(paragraphList, paragraph);
+                paragraphList = codeBlockParser.parseToCodeBlock(paragraphList, paragraph);
             }
             wholeText.addElement(paragraphList);
         }
